@@ -223,7 +223,7 @@ function logAttempt(angle, power, drag, distance) {
         <td>${attemptCount}</td>
         <td>${angle}°</td>
         <td>${power}</td>
-        <td>${drag > 0 ? 'On' : 'Off'}</td>
+        <td>${drag > 0 ? '켜짐' : '꺼짐'}</td>
         <td>${distance}m</td>
     `;
     dataBody.appendChild(row);

@@ -14,11 +14,11 @@
     <div id="canvas-container"></div>
 
     <div id="ui-layer">
-        <h1>Control Panel</h1>
+        <h1>제어판</h1>
 
         <div class="control-group">
             <label>
-                Launch Angle
+                발사 각도
                 <span id="angle-val" class="value-display">45°</span>
             </label>
             <input type="range" id="angle-slider" min="0" max="90" value="45">
@@ -26,42 +26,42 @@
 
         <div class="control-group">
             <label>
-                Fire Power
-                <span id="power-val" class="value-display">15</span>
+                발사 파워
+                <span id="power-val" class="value-display">5</span>
             </label>
-            <input type="range" id="power-slider" min="5" max="30" value="15" step="0.5">
+            <input type="range" id="power-slider" min="5" max="30" value="5" step="0.5">
         </div>
 
         <div class="control-group">
             <label style="justify-content: flex-start; gap: 10px; cursor: pointer;">
                 <input type="checkbox" id="drag-enabled" style="width: auto; accent-color: var(--accent-color);">
-                Enable Air Resistance (Fixed 0.2)
+                공기 저항 켜기 (고정 0.2)
             </label>
         </div>
 
         <div class="button-group">
-            <button id="btn-reset">Reset World</button>
-            <button id="btn-fire">FIRE!</button>
+            <button id="btn-reset">초기화</button>
+            <button id="btn-fire">발사!</button>
         </div>
     </div>
 
     <div id="stats-display">
         <div class="stat-box">
-            <div class="stat-label">Last Distance</div>
+            <div class="stat-label">마지막 거리</div>
             <div class="stat-value"><span id="distance-display">0.0</span> <span class="unit">m</span></div>
         </div>
     </div>
 
     <div id="data-panel">
-        <h3>Flight Data</h3>
+        <h3>비행 데이터</h3>
         <table id="data-table">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Angle</th>
-                    <th>Power</th>
-                    <th>Drag</th>
-                    <th>Dist.</th>
+                    <th>각도</th>
+                    <th>파워</th>
+                    <th>저항</th>
+                    <th>거리</th>
                 </tr>
             </thead>
             <tbody id="data-body">
@@ -69,7 +69,7 @@
         </table>
     </div>
 
-    <div id="hint">Tip: Try 45° for maximum range!</div>
+    <div id="hint">팁: 최대 사거리를 위해 45°로 쏴보세요!</div>
 
     <script src="script.js"></script>
 </body>
