@@ -23,6 +23,7 @@ const config = {
 let engine, render, runner;
 let projectiles = [];
 let trails = []; // Array of {x, y} arrays
+let ground; // Make ground global to update it on resize
 
 // UI Elements
 const angleSlider = document.getElementById('angle-slider');
@@ -37,7 +38,42 @@ const dragEnabled = document.getElementById('drag-enabled');
 
 let attemptCount = 0;
 
+function updateDimensions() {
+    config.width = window.innerWidth;
+    config.height = window.innerHeight;
+
+    // Mobile check: if width is small, increase ground height to clear the UI panel
+    if (config.width <= 768) {
+        config.groundHeight = 320; // Approx height of UI panel + padding
+        config.cannonPos.x = 20; // Move cannon to the left on mobile
+    } else {
+        config.groundHeight = 60;
+        config.cannonPos.x = 100; // Default position for desktop
+    }
+
+    // Update cannon Y position to stay on ground
+    // Pivot at 12px above ground (radius 10 + 2px clearance) to match landing height
+    config.cannonPos.y = config.height - config.groundHeight - 12;
+}
+
+function createGround() {
+    return Bodies.rectangle(
+        config.groundWidth / 2, // Center so it starts at 0 and goes right
+        config.height - config.groundHeight / 2,
+        config.groundWidth,
+        config.groundHeight,
+        {
+            isStatic: true,
+            render: { fillStyle: '#333' },
+            label: 'Ground'
+        }
+    );
+}
+
 function init() {
+    // Set initial dimensions
+    updateDimensions();
+
     // Create engine
     engine = Engine.create();
     engine.world.gravity.y = 1; // Standard gravity
@@ -56,17 +92,7 @@ function init() {
     });
 
     // Create ground
-    const ground = Bodies.rectangle(
-        config.groundWidth / 2, // Center so it starts at 0 and goes right
-        config.height - config.groundHeight / 2,
-        config.groundWidth,
-        config.groundHeight,
-        {
-            isStatic: true,
-            render: { fillStyle: '#333' },
-            label: 'Ground'
-        }
-    );
+    ground = createGround();
 
     // Add bodies
     Composite.add(engine.world, [ground]);
@@ -83,8 +109,7 @@ function init() {
 
     // Window resize handling
     window.addEventListener('resize', () => {
-        config.width = window.innerWidth;
-        config.height = window.innerHeight;
+        updateDimensions();
 
         // Update render bounds
         render.canvas.width = config.width;
@@ -96,14 +121,10 @@ function init() {
         render.bounds.max.x = config.width;
         render.bounds.max.y = config.height;
 
-        // Reposition Ground
-        Body.setPosition(ground, {
-            x: config.groundWidth / 2,
-            y: config.height - config.groundHeight / 2
-        });
-
-        // Update cannon Y position to stay on ground
-        config.cannonPos.y = config.height - config.groundHeight - 20;
+        // Re-create Ground to match new height
+        Composite.remove(engine.world, ground);
+        ground = createGround();
+        Composite.add(engine.world, ground);
 
         // Reset world to prevent physics glitches and invalid distances
         // because the "launch point" has effectively moved relative to existing bodies
@@ -121,12 +142,13 @@ function fireProjectile() {
     // Determine drag
     let frictionAir = 0;
     if (dragEnabled.checked) {
-        frictionAir = 0.01; // Reduced from 0.2 to 0.01 for realism
+        frictionAir = 0.03; // Balanced value: shifts optimal angle but allows good flight distance
     }
 
-    // Calculate spawn position at tip of cannon
-    const spawnX = config.cannonPos.x + Math.cos(-angleRad) * config.cannonLength;
-    const spawnY = config.cannonPos.y + Math.sin(-angleRad) * config.cannonLength;
+    // Calculate spawn position at pivot (to ensure 45deg is max range)
+    // We ignore cannonLength for physics to eliminate horizontal/vertical bias
+    const spawnX = config.cannonPos.x;
+    const spawnY = config.cannonPos.y;
 
     const projectile = Bodies.circle(spawnX, spawnY, 10, {
         restitution: 0.5, // Bounciness
@@ -205,7 +227,7 @@ function logAttempt(angle, power, drag, distance) {
         <td>${attemptCount}</td>
         <td>${angle}°</td>
         <td>${power}</td>
-        <td>${drag > 0 ? 'On' : 'Off'}</td>
+        <td>${drag > 0 ? '켜짐' : '꺼짐'}</td>
         <td>${distance}m</td>
     `;
     dataBody.appendChild(row);

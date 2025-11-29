@@ -216,3 +216,80 @@ td {
 tr:last-child td {
     border-bottom: none;
 }
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+
+    /* Adjust Control Panel */
+    #ui-layer {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        border-radius: 12px 12px 0 0;
+        /* Rounded top corners only */
+        box-sizing: border-box;
+        /* Ensure padding doesn't overflow width */
+        padding: 15px;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+    }
+
+    h1 {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+    .control-group {
+        margin-bottom: 10px;
+    }
+
+    /* Adjust Data Panel */
+    #data-panel {
+        top: 10px;
+        left: 10px;
+        width: auto;
+        max-width: 180px;
+        /* Limit width on small screens */
+        max-height: 150px;
+        padding: 10px;
+    }
+
+    #data-panel h3 {
+        font-size: 0.9rem;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th,
+    td {
+        padding: 3px;
+    }
+
+    /* Adjust Stats Display */
+    #stats-display {
+        top: 10px;
+        right: 10px;
+    }
+
+    .stat-box {
+        padding: 10px 15px;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    /* Adjust Hint */
+    #hint {
+        bottom: 260px;
+        /* Move up above the control panel */
+        font-size: 0.8rem;
+        width: 100%;
+        text-align: center;
+    }
+}
